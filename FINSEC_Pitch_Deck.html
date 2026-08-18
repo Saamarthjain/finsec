@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FINSEC — Finance & Securities Society | IIT Jodhpur SME</title>
+<style>
+  :root{
+    --navy:#1B2340;
+    --navy2:#242D57;
+    --navy3:#2D3768;
+    --ice:#CADCFC;
+    --gold:#B08D57;
+    --white:#FFFFFF;
+    --bg-light:#F5F7FB;
+    --card-light:#FFFFFF;
+    --text-dark:#1B2340;
+    --text-muted:#5B6478;
+    --line-light:#E1E6F0;
+    --chip:#EEF2FA;
+    --icon-bg:#E6ECFA;
+    --serif:"Cambria","Georgia",serif;
+    --sans:"Calibri","Segoe UI","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:var(--sans);
+    background:var(--navy);
+    color:var(--text-dark);
+    scroll-behavior:smooth;
+  }
+  .deck{
+    height:100vh;
+    overflow-y:scroll;
+    scroll-snap-type:y mandatory;
+  }
+  .slide{
+    width:100%;
+    min-height:100vh;
+    scroll-snap-align:start;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    position:relative;
+    padding:5.5vh 6vw;
+    overflow:hidden;
+  }
+  .slide.light{background:var(--bg-light);color:var(--text-dark);}
+  .slide.dark{background:var(--navy);color:var(--white);}
+
+  .eyebrow{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:2.5px;
+    color:var(--gold);
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  h1.slide-title{
+    font-family:var(--serif);
+    font-weight:700;
+    font-size:clamp(24px,2.6vw,34px);
+    line-height:1.15;
+    max-width:1000px;
+    color:var(--text-dark);
+    margin-bottom:22px;
+  }
+  .dark h1.slide-title{color:var(--white);}
+  .body-text{
+    font-size:15px;
+    line-height:1.55;
+    color:var(--text-muted);
+    max-width:920px;
+  }
+  .dark .body-text{color:var(--ice);}
+  .italic-quote{
+    font-family:var(--serif);
+    font-style:italic;
+    color:var(--gold);
+  }
+
+  .footer{
+    position:absolute;
+    bottom:26px;
+    left:6vw;
+    right:6vw;
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    color:#9AA2B8;
+  }
+  .dark .footer{color:#8A93B8;}
+
+  /* ---------- shared card styles ---------- */
+  .card{
+    background:var(--card-light);
+    border:1px solid var(--line-light);
+    border-radius:10px;
+    box-shadow:0 6px 18px rgba(27,35,64,0.08);
+    padding:20px;
+  }
+  .dark .card{background:var(--navy2);border-color:var(--navy3);box-shadow:none;}
+
+  .icon-circle{
+    width:48px;height:48px;border-radius:50%;
+    background:var(--icon-bg);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .dark .icon-circle{background:var(--navy3);}
+  .icon-circle svg{width:22px;height:22px;stroke:var(--navy);fill:none;stroke-width:2;}
+  .icon-circle.on-gold{background:var(--gold);}
+  .icon-circle.on-gold svg{stroke:var(--white);}
+  .dark .icon-circle svg{stroke:var(--ice);}
+
+  /* ---------- SLIDE 1 : COVER ---------- */
+  #s1{justify-content:center;}
+  .cover-chart{position:absolute;right:6vw;bottom:12vh;width:32vw;max-width:420px;opacity:.9;}
+  .cover-eyebrow{margin-bottom:26px;}
+  .cover-title{
+    font-family:var(--serif);
+    font-weight:700;
+    font-size:clamp(56px,8vw,92px);
+    color:var(--white);
+    line-height:1;
+    margin-bottom:14px;
+  }
+  .cover-sub{font-size:clamp(18px,1.6vw,24px);color:var(--ice);margin-bottom:10px;}
+  .cover-tag{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:15px;margin-bottom:60px;}
+  .cover-rule{width:220px;height:1px;background:#3A4478;margin-bottom:18px;}
+  .cover-org{font-size:13px;color:#AEB6D6;margin-bottom:6px;}
+  .cover-by{font-size:12px;color:#7C86AC;}
+
+  /* ---------- SLIDE 2 : OPPORTUNITY FLOW ---------- */
+  .flow-row{display:flex;gap:22px;margin-top:36px;flex-wrap:nowrap;}
+  .flow-step{
+    flex:1;min-width:0;
+    text-align:center;
+    padding:26px 12px 20px;
+    position:relative;
+  }
+  .flow-step .icon-circle{margin:0 auto 14px;}
+  .flow-step .label{font-weight:700;font-size:13px;line-height:1.3;}
+  .flow-arrow{
+    position:absolute;top:50%;right:-17px;transform:translateY(-50%);
+    color:var(--gold);font-size:16px;z-index:2;
+  }
+
+  /* ---------- SLIDE 3 : PLACEMENT CASE ---------- */
+  .stat-row{display:flex;gap:22px;margin-top:6px;}
+  .stat-card{flex:1;}
+  .stat-big{font-family:var(--serif);font-weight:700;font-size:30px;color:var(--navy);margin:14px 0 6px;}
+  .stat-small{font-size:12.5px;color:var(--text-muted);line-height:1.4;}
+  .callout-box{
+    background:var(--icon-bg);
+    border-radius:10px;
+    padding:22px 26px;
+    margin-top:26px;
+    font-style:italic;
+    font-size:13.5px;
+    color:var(--navy);
+    line-height:1.55;
+  }
+
+  /* ---------- SLIDE 4 : WHY FINSEC grid ---------- */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:6px;}
+  .cap-card{display:flex;flex-direction:column;gap:8px;}
+  .cap-card .top{display:flex;align-items:center;gap:12px;}
+  .cap-card .heading{font-weight:700;font-size:13.5px;}
+  .cap-card .desc{font-size:11px;color:var(--text-muted);line-height:1.4;}
+  .quote-line{margin-top:26px;font-family:var(--serif);font-style:italic;color:var(--gold);font-size:15px;}
+
+  /* ---------- SLIDE 5 : VISION funnel ---------- */
+  .funnel-statement{
+    font-family:var(--serif);font-weight:700;font-size:clamp(22px,2.4vw,30px);
+    color:var(--white);max-width:900px;margin-bottom:34px;line-height:1.2;
+  }
+  .funnel-row{display:flex;gap:26px;margin-bottom:30px;}
+  .funnel-node{
+    flex:1;background:var(--navy2);border:1px solid var(--navy3);border-radius:10px;
+    padding:28px 10px;text-align:center;font-family:var(--serif);font-weight:700;font-size:19px;color:var(--ice);
+    position:relative;
+  }
+  .funnel-node.last{color:var(--gold);}
+  .funnel-node:not(:last-child)::after{
+    content:"→";position:absolute;right:-24px;top:50%;transform:translateY(-50%);
+    color:#4A5488;font-size:18px;
+  }
+  .mission-line{font-style:italic;color:var(--ice);font-size:13.5px;max-width:900px;line-height:1.55;}
+
+  /* ---------- SLIDE 6 : verticals overview cards ---------- */
+  .vert-card{min-height:150px;display:flex;flex-direction:column;gap:10px;}
+  .vert-card .top{display:flex;align-items:center;gap:12px;}
+  .vert-card .heading{font-weight:700;font-size:14.5px;}
+  .vert-card .desc{font-size:11.5px;color:var(--text-muted);line-height:1.45;}
+  .vert-note{font-size:11px;font-style:italic;color:var(--text-muted);align-self:center;text-align:center;padding:0 10px;}
+
+  /* ---------- SLIDE 7 : verticals detail rows ---------- */
+  .vrow{
+    display:flex;align-items:center;gap:16px;
+    background:var(--card-light);border:1px solid var(--line-light);border-radius:8px;
+    padding:12px 16px;margin-bottom:10px;
+  }
+  .vrow .name{font-weight:700;font-size:13px;min-width:130px;}
+  .vrow .chips{display:flex;gap:10px;flex:1;flex-wrap:wrap;}
+  .vrow .chip{
+    background:var(--chip);border-radius:20px;padding:8px 14px;font-size:10.5px;color:var(--navy);
+    text-align:center;flex:1;min-width:120px;
+  }
+
+  /* ---------- SLIDE 8 : Capital League ---------- */
+  .cl-title{font-family:var(--serif);font-weight:700;font-size:clamp(26px,3vw,36px);color:var(--white);margin-bottom:6px;}
+  .cl-sub{font-style:italic;color:var(--ice);font-size:14px;margin-bottom:30px;}
+  .cl-cols{display:flex;gap:60px;}
+  .cl-col{flex:1;}
+  .cl-heading{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase;}
+  .mech-item{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start;}
+  .mech-num{
+    width:26px;height:26px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold);
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;
+  }
+  .mech-text{font-size:12.5px;color:var(--white);line-height:1.4;}
+  .bar-row{margin-bottom:20px;}
+  .bar-label-row{display:flex;justify-content:space-between;font-size:12px;color:var(--ice);margin-bottom:8px;}
+  .bar-label-row .pct{color:var(--gold);font-weight:700;}
+  .bar-track{height:12px;border-radius:6px;background:var(--navy2);overflow:hidden;}
+  .bar-fill{height:100%;background:var(--gold);border-radius:6px;}
+  .sim-note{
+    margin-top:10px;background:var(--navy2);border:1px solid var(--navy3);border-radius:8px;
+    padding:16px 18px;font-style:italic;font-size:11.5px;color:var(--ice);line-height:1.4;
+  }
+
+  /* ---------- SLIDE 9 : Roadmap timeline ---------- */
+  .timeline{position:relative;margin-top:70px;height:180px;}
+  .timeline-line{position:absolute;top:50%;left:0;right:0;height:2px;background:var(--line-light);}
+  .tl-node{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:var(--gold);border:2px solid var(--white);transform:translate(-50%,-50%);box-shadow:0 0 0 1px var(--line-light);}
+  .tl-card{position:absolute;width:170px;text-align:center;}
+  .tl-card .month{font-weight:700;font-size:11px;color:var(--navy);margin-bottom:6px;letter-spacing:.5px;}
+  .tl-card .box{background:var(--card-light);border:1px solid var(--line-light);border-radius:8px;padding:12px 10px;font-size:10.5px;color:var(--text-muted);line-height:1.35;}
+  .tl-caption{margin-top:26px;font-style:italic;font-size:12px;color:var(--text-muted);}
+
+  /* ---------- SLIDE 10 : Founder chain ---------- */
+  .chain-row{display:flex;gap:14px;margin-top:6px;}
+  .chain-node{
+    flex:1;background:var(--card-light);border:1px solid var(--line-light);border-radius:8px;
+    padding:20px 8px;text-align:center;font-weight:700;font-size:11px;line-height:1.3;
+    position:relative;box-shadow:0 4px 10px rgba(27,35,64,0.06);
+  }
+  .chain-node.last{background:var(--gold);color:var(--white);border-color:var(--gold);}
+  .chain-node:not(:last-child)::after{
+    content:"›";position:absolute;right:-13px;top:50%;transform:translateY(-50%);
+    color:var(--gold);font-size:20px;font-weight:700;
+  }
+  .founder-quote-box{
+    margin-top:34px;background:var(--card-light);border:1px solid var(--line-light);border-radius:10px;
+    padding:26px 30px;font-family:var(--serif);font-style:italic;font-size:14.5px;line-height:1.5;color:var(--text-dark);
+  }
+  .founder-creds{margin-top:20px;font-size:10.5px;color:var(--text-muted);}
+
+  /* ---------- SLIDE 11 : Team & governance ---------- */
+  .tg-cols{display:flex;gap:60px;margin-top:10px;}
+  .tg-col{flex:1;}
+  .org-box{
+    background:var(--navy);color:var(--white);border-radius:8px;padding:12px;text-align:center;
+    font-weight:700;font-size:12px;width:220px;margin:0 auto 8px;
+  }
+  .org-box.vp{background:var(--icon-bg);color:var(--navy);width:200px;}
+  .org-connector{width:2px;height:20px;background:var(--line-light);margin:0 auto;}
+  .org-leads{display:flex;gap:8px;margin-top:8px;}
+  .org-lead{
+    flex:1;background:var(--card-light);border:1px solid var(--line-light);border-radius:6px;
+    padding:10px 6px;text-align:center;font-size:9.5px;font-weight:700;line-height:1.25;
+  }
+  .org-note{margin-top:16px;font-size:10.5px;font-style:italic;color:var(--text-muted);text-align:center;}
+  .gov-heading{font-weight:700;font-size:14px;margin-bottom:16px;}
+  .gov-item{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start;}
+  .gov-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);margin-top:5px;flex-shrink:0;}
+  .gov-text{font-size:11.5px;color:var(--text-muted);line-height:1.4;}
+
+  /* ---------- SLIDE 12 : Metrics ---------- */
+  .metric-card{text-align:center;padding:26px 14px;}
+  .metric-big{font-family:var(--serif);font-weight:700;font-size:38px;color:var(--navy);margin-bottom:8px;}
+  .metric-small{font-size:11.5px;color:var(--text-muted);line-height:1.4;}
+
+  /* ---------- SLIDE 13 : Closing ---------- */
+  .ask-label{margin-bottom:18px;}
+  .ask-text{font-size:16px;line-height:1.5;color:var(--white);max-width:1000px;margin-bottom:30px;}
+  .ask-rule{width:100%;max-width:1000px;height:1px;background:#343E70;margin-bottom:34px;}
+  .closing-brand{font-family:var(--serif);font-weight:700;font-size:44px;color:var(--white);margin-bottom:8px;}
+  .closing-sub{font-size:13px;color:var(--ice);margin-bottom:6px;}
+  .closing-tag{font-style:italic;color:var(--gold);font-size:12.5px;margin-bottom:26px;}
+  .closing-quote{
+    background:var(--navy2);border:1px solid var(--navy3);border-radius:10px;padding:24px 30px;
+    max-width:1000px;font-family:var(--serif);font-weight:700;font-style:italic;font-size:17px;color:var(--white);line-height:1.4;
+    margin-bottom:20px;
+  }
+  .closing-credit{font-size:11px;color:#8A93B8;}
+
+  /* ---------- nav ---------- */
+  .nav{
+    position:fixed;right:22px;top:50%;transform:translateY(-50%);
+    display:flex;flex-direction:column;gap:10px;z-index:50;
+  }
+  .nav button{
+    width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.25);
+    background:rgba(27,35,64,0.55);color:#fff;font-size:14px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);
+  }
+  .nav button:hover{background:rgba(176,141,87,0.85);}
+  .counter{
+    position:fixed;left:22px;bottom:16px;font-size:11px;color:rgba(255,255,255,0.55);
+    background:rgba(27,35,64,0.5);padding:5px 10px;border-radius:12px;z-index:50;
+    font-family:var(--sans);
+  }
+
+  @media print{
+    .nav,.counter{display:none;}
+    .deck{overflow:visible;height:auto;}
+    .slide{min-height:100vh;page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1 — COVER -->
+  <section class="slide dark" id="s1">
+    <svg class="cover-chart" viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="150" width="34" height="90" fill="#222C55"/>
+      <rect x="52" y="90" width="34" height="150" fill="#222C55"/>
+      <rect x="104" y="120" width="34" height="120" fill="#222C55"/>
+      <rect x="156" y="60" width="34" height="180" fill="#222C55"/>
+      <rect x="208" y="100" width="34" height="140" fill="#222C55"/>
+      <rect x="260" y="30" width="34" height="210" fill="#222C55"/>
+      <polyline points="20,210 100,170 160,190 230,110 300,60" fill="none" stroke="#3A4478" stroke-width="2.5"/>
+      <circle cx="20" cy="210" r="5" fill="#B08D57"/>
+      <circle cx="100" cy="170" r="5" fill="#B08D57"/>
+      <circle cx="160" cy="190" r="5" fill="#B08D57"/>
+      <circle cx="230" cy="110" r="5" fill="#B08D57"/>
+      <circle cx="300" cy="60" r="6" fill="#B08D57"/>
+    </svg>
+    <div class="eyebrow cover-eyebrow">Proposal for Student Society Approval</div>
+    <div class="cover-title">FINSEC</div>
+    <div class="cover-sub">Finance &amp; Securities Society</div>
+    <div class="cover-tag">Learn Finance.&nbsp;&nbsp;Analyse Markets.&nbsp;&nbsp;Build Capital.</div>
+    <div class="cover-rule"></div>
+    <div class="cover-org">IIT Jodhpur School of Management</div>
+    <div class="cover-by">Proposed by Saamarth Jain&nbsp;&nbsp;|&nbsp;&nbsp;M26MSA054&nbsp;&nbsp;|&nbsp;&nbsp;MBA 1st Year, Batch of 2028&nbsp;&nbsp;|&nbsp;&nbsp;August 2026</div>
+  </section>
+
+  <!-- SLIDE 2 — THE OPPORTUNITY -->
+  <section class="slide light" id="s2">
+    <div class="eyebrow">The Opportunity</div>
+    <h1 class="slide-title">Turning classroom finance into practical financial thinking.</h1>
+    <p class="body-text">MBA coursework builds the theoretical foundation — valuation, corporate finance, markets. A dedicated, student-led platform can extend that foundation into hands-on practice, giving students a structured path from theory to real capability.</p>
+
+    <div class="flow-row">
+      <div class="card flow-step">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M4 4h7v16H4z"/><path d="M13 4h7v16h-7z"/></svg></div>
+        <div class="label">Classroom<br>Finance</div>
+        <div class="flow-arrow">▶</div>
+      </div>
+      <div class="card flow-step">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M9 3h6v4l3 9a2 2 0 0 1-2 3H8a2 2 0 0 1-2-3l3-9V3z"/></svg></div>
+        <div class="label">Practical<br>Application</div>
+        <div class="flow-arrow">▶</div>
+      </div>
+      <div class="card flow-step">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M8 14l-2 7 6-3 6 3-2-7"/></svg></div>
+        <div class="label">Competition</div>
+        <div class="flow-arrow">▶</div>
+      </div>
+      <div class="card flow-step">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg></div>
+        <div class="label">Industry<br>Exposure</div>
+        <div class="flow-arrow">▶</div>
+      </div>
+      <div class="card flow-step">
+        <div class="icon-circle on-gold"><svg viewBox="0 0 24 24"><path d="M4 20 20 4"/><path d="M9 4h11v11"/></svg></div>
+        <div class="label">Careers</div>
+      </div>
+    </div>
+    <div class="footer"><span>FINSEC &nbsp;·&nbsp; IIT Jodhpur School of Management</span><span>2 / 13</span></div>
+  </section>
+
+  <!-- SLIDE 3 — THE PLACEMENT CASE -->
+  <section class="slide light" id="s3">
+    <div class="eyebrow">The Placement Case</div>
+    <h1 class="slide-title">Finance interest in the cohort is well ahead of finance placements.</h1>
+
+    <div class="stat-row">
+      <div class="card stat-card">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg></div>
+        <div class="stat-big">86</div>
+        <div class="stat-small">Students in the current SME MBA cohort</div>
+      </div>
+      <div class="card stat-card">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" fill="#1B2340" stroke="none"/></svg></div>
+        <div class="stat-big">Many</div>
+        <div class="stat-small">Have expressed interest in pursuing finance roles</div>
+      </div>
+      <div class="card stat-card">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20v-4"/></svg></div>
+        <div class="stat-big">Few</div>
+        <div class="stat-small">Finance placements landed by previous SME batches, relative to that interest</div>
+      </div>
+    </div>
+
+    <div class="callout-box">Most of us are freshers. The gap isn't a lack of interest — it's a lack of applied, market-facing skill-building before placements. FINSEC's workshops, competitions, and simulations are built to close exactly that gap, directly ahead of placement season.</div>
+    <div class="footer"><span>FINSEC &nbsp;·&nbsp; IIT Jodhpur School of Management</span><span>3 / 13</span></div>
+  </section>
+
+  <!-- SLIDE 4 — WHY FINSEC -->
+  <section class="slide light" id="s4">
+    <div class="eyebrow">Why FINSEC?</div>
+    <h1 class="slide-title">Six practical capabilities a dedicated finance platform can build.</h1>
+
+    <div class="grid-3">
+      <div class="card cap-card">
+        <div class="top"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20v-4"/></svg></div><div class="heading">Financial Markets</div></div>
+        <div class="desc">Structured exposure to market movements, sectors and instruments.</div>
+      </div>
+      <div class="card cap-card">
+        <div class="top"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M9 3h6v4l3 9a2 2 0 0 1-2 3H8a2 2 0 0 1-2-3l3-9V3z"/></svg></div><div class="heading">Valuation &amp; Modelling</div></div>
+        <div class="desc">Applied practice in DCF, ratios, and financial statement analysis.</div>
+      </div>
+      <div class="card cap-card">
+        <div class="top"><div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M8 14l-2 7 6-3 6 3-2-7"/></svg></div><div class="heading">Case Competitions</div></div>
+        <div class="desc">Preparation and participation in national finance case challenges.</div>
+      </div>
+      <div class="card cap-card">
+        <div class="top"><div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.4" fill="#1B2340" stroke="none"/></svg></div><div class="heading">Risk Analysis</div></div>
+        <div class="desc">Evaluating return alongside risk in investment decision-making.</div>
+      </div>
+      <div class="card cap-card">
+        <div class="top"><div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg></div><div class="heading">Industry &amp; Alumni Access</div></div>
+        <div class="desc">Direct interaction with finance professionals and SME alumni.</div>
+      </div>
+      <div class="card cap-card">
+        <div class="top"><div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg></div><div class="heading">Career Preparation</div></div>
+        <div class="desc">Building profiles oriented toward finance-focused careers.</div>
+      </div>
+    </div>
+    <div class="quote-line">"FINSEC complements the existing student ecosystem by providing a dedicated finance-focused platform."</div>
+    <div class="footer"><span>FINSEC &nbsp;·&nbsp; IIT Jodhpur School of Management</span><span>4 / 13</span></div>
+  </section>
+
+  <!-- SLIDE 5 — VISION & MISSION -->
+  <section class="slide dark" id="s5">
+    <div class="eyebrow">Vision &amp; Mission</div>
+    <div class="funnel-statement">The most practical, student-driven finance ecosystem at SME.</div>
+    <div class="funnel-row">
+      <div class="funnel-node">Learn</div>
+      <div class="funnel-node">Apply</div>
+      <div class="funnel-node">Compete</div>
+      <div class="funnel-node last">Connect</div>
+    </div>
+    <div class="mission-line">FINSEC exists to move students from understanding finance in theory to practising it — through markets simulation, applied workshops, competitions, and direct industry contact.</div>
+    <div class="footer"><span>FINSEC &nbsp;·&nbsp; IIT Jodhpur School of Management</span><span>5 / 13</span></div>
+  </section>
+
+  <!-- SLIDE 6 — WHAT FINSEC WILL DO -->
+  <section class="slide light" id="s6">
+    <div class="eyebrow">What FINSEC Will Do</div>
+    <h1 class="slide-title">Five ways FINSEC will create hands-on finance exposure.</h1>
+    <div class="grid-3">
+      <div class="card vert-card">
+        <div class="top"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20v-4"/></svg></div><div class="heading">FINSEC Markets</div></div>
+        <div class="desc">Stock pitches, a mock portfolio, and market discussion.</div>
+      </div>
+      <div class="card vert-card">
+        <div class="top"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M9 3h6v4l3 9a2 2 0 0 1-2 3H8a2 2 0 0 1-2-3l3-9V3z"/></svg></div><div class="heading">FINSEC Labs</div></div>
+        <div class="desc">Hands-on workshops — Excel, modelling, valuation.</div>
+      </div>
+      <div class="card vert-card">
+        <div class="top"><div class="icon-circle"><svg viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="11" rx="1.5"/><path d="M8 9V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/></svg></div><div class="heading">FINSEC Cases</div></div>
+        <div class="desc">Finance case competitions and simulations.</div>
+      </div>
+      <div class="card vert-card">
+        <div class="top"><div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg></div><div class="heading">FINSEC Connect</div></div>
+        <div class="desc">Alumni, professionals, and career panels.</div>
+      </div>
+      <div class="card vert-card">
+        <div class="top"><div class="icon-circle"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21l4-4 4 4"/></svg></div><div class="heading">FINSEC Forum</div></div>
+        <div class="desc">A recurring space for markets and finance discussion.</div>
+      </div>
+      <div class="vert-note">Detailed activities for each vertical follow on the next slide.</div>
+    </div>
+    <div class="footer"><span>FINSEC &nbsp;·&nbsp; IIT Jodhpur School of Management</span><span>6 / 13</span></div>
+  </section>
+
+  <!-- SLIDE 7 — FINSEC VERTICALS DETAIL -->
+  <section class="slide light" id="s7">
+    <div class="eyebrow">FINSEC Verticals</div>
+    <h1 class="slide-title">What each vertical actually delivers, activity by activity.</h1>
+
+    <div class="vrow"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20v-4"/></svg></div><div class="name">FINSEC Markets</div>
+      <div class="chips"><div class="chip">Stock pitches</div><div class="chip">Mock portfolio</div><div class="chip">Investment thesis challenges</div></div></div>
+    <div class="vrow"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M9 3h6v4l3 9a2 2 0 0 1-2 3H8a2 2 0 0 1-2-3l3-9V3z"/></svg></div><div class="name">FINSEC Labs</div>
+      <div class="chips"><div class="chip">Excel for Finance</div><div class="chip">DCF &amp; WACC/CAPM</div><div class="chip">Ratio &amp; statement analysis</div></div></div>
+    <div class="vrow"><div class="icon-circle"><svg viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="11" rx="1.5"/><path d="M8 9V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/></svg></div><div class="name">FINSEC Cases</div>
+      <div class="chips"><div class="chip">M&amp;A cases</div><div class="chip">Valuation challenges</div><div class="chip">Inter-B-school competitions</div></div></div>
+    <div class="vrow"><div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg></div><div class="name">FINSEC Connect</div>
+      <div class="chips"><div class="chip">Alumni sessions</div><div class="chip">CFO / IB / PE-VC talks</div><div class="chip">Career panels &amp; mentorship</div></div></div>
+    <div class="vrow"><div class="icon-circle"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21l4-4 4 4"/></svg></div><div class="name">FINSEC Forum</div>
+      <div class="chips"><div class="chip">Finance in 60 Minutes</div><div class="chip">Weekly market round-up</div><div class="chip">Student-led presentations</div></div></div>
+
+    <div class="footer"><span>FINSEC &nbsp;·&nbsp; IIT Jodhpur School of Management</span><span>7 / 13</span></div>
+  </section>
+
+  <!-- SLIDE 8 — CAPITAL LEAGUE -->
+  <section class="slide dark" id="s8">
+    <div class="eyebrow">Flagship Initiative</div>
+    <div class="cl-title">FINSEC Capital League</div>
+    <div class="cl-sub">A semester-long simulated investment competition.</div>
+
+    <div class="cl-cols">
+      <div class="cl-col">
+        <div class="cl-heading">How It Works</div>
+        <div class="mech-item"><div class="mech-num">1</div><div class="mech-text">Teams receive a virtual ₹10 lakh portfolio</div></div>
+        <div class="mech-item"><div class="mech-num">2</div><div class="mech-text">Teams research, decide, and submit investment theses</div></div>
+        <div class="mech-item"><div class="mech-num">3</div><div class="mech-text">Portfolio performance is tracked through the semester</div></div>
+        <div class="mech-item"><div class="mech-num">4</div><div class="mech-text">Finalists defend their portfolio before a panel</div></div>
+      </div>
+      <div class="cl-col">
+        <div class="cl-heading">Evaluation Weightage</div>
+        <div class="bar-row">
+          <div class="bar-label-row"><span>Returns</span><span class="pct">40%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:40%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label-row"><span>Risk-Adjusted Performance</span><span class="pct">30%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:30%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label-row"><span>Investment Thesis</span><span class="pct">30%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:30%"></div></div>
+        </div>
+        <div class="sim-note">Simulated / educational activity only — no real-money investing.</div>
+      </div>
+    </div>
+    <div class="footer"><span>FINSEC &nbsp;·&nbsp; IIT Jodhpur School of Management</span><span>8 / 13</span></div>
+  </section>
+
+  <!-- SLIDE 9 — ROADMAP -->
+  <section class="slide light" id="s9">
+    <div class="eyebrow">First-Semester Roadmap</div>
+    <h1 class="slide-title">A realistic, low-burden launch calendar.</h1>
+
+    <div class="timeline">
+      <div class="timeline-line"></div>
+
+      <div class="tl-node" style="left:2%;"></div>
+      <div class="tl-card" style="left:2%; top:calc(50% - 100px);">
+        <div class="month">August</div>
+        <div class="box">FINSEC Launch + Finance Quiz</div>
+      </div>
+
+      <div class="tl-node" style="left:26%;"></div>
+      <div class="tl-card" style="left:26%; top:calc(50% + 24px);">
+        <div class="month">September</div>
+        <div class="box">Excel &amp; Financial Modelling Workshop</div>
+      </div>
+
+      <div class="tl-node" style="left:50%;"></div>
+      <div class="tl-card" style="left:50%; top:calc(50% - 100px);">
+        <div class="month">October</div>
+        <div class="box">Capital League Begins + Stock Pitch Competition</div>
+      </div>
+
+      <div class="tl-node" style="left:74%;"></div>
+      <div class="tl-card" style="left:74%; top:calc(50% + 24px);">
+        <div class="month">November</div>
+        <div class="box">Alumni / Industry Finance Session</div>
+      </div>
+
+      <div class="tl-node" style="left:98%;"></div>
+      <div class="tl-card" style="left:98%; top:calc(50% - 100px); transform:translateX(-100%);">
+        <div class="month">December</div>
+        <div class="box">Finance Case Competition + Capital League Finale</div>
+      </div>
+    </div>
+    <div class="tl-caption">Five touchpoints across the semester — deliberately paced, not event-heavy.</div>
+    <div class="footer"><span>FINSEC &nbsp;·&nbsp; IIT Jodhpur School of Management</span><span>9 / 13</span></div>
+  </section>
+
+  <!-- SLIDE 10 — FOUNDER STORY -->
+  <section class="slide light" id="s10">
+    <div class="eyebrow">Why I Am Starting FINSEC</div>
+    <h1 class="slide-title">A path built from finance academics, numbers, research, and leadership.</h1>
+
+    <div class="chain-row">
+      <div class="chain-node">B.Com (Hons.)</div>
+      <div class="chain-node">Accounting<br>Internship</div>
+      <div class="chain-node">Research &amp;<br>Analytical Experience</div>
+      <div class="chain-node">Marketing &amp;<br>Student Leadership</div>
+      <div class="chain-node">MBA at<br>IIT Jodhpur</div>
+      <div class="chain-node last">FINSEC</div>
+    </div>
+
+    <div class="founder-quote-box">"I've studied finance academically, worked with numbers and business processes professionally, and built research and analytical experience alongside student leadership and event execution. FINSEC is a chance to bring these threads together into something useful for the SME community."</div>
+    <div class="founder-creds">B.Com (Hons.), VIPS Delhi &nbsp;·&nbsp; Accounting Intern, Delphi Infosolutions &nbsp;·&nbsp; Research Analyst Intern, Concentrix &nbsp;·&nbsp; Marketing experience, Animall.in &amp; Marigold &nbsp;·&nbsp; Shutterbugs, VIPS (student leadership)</div>
+    <div class="footer"><span>FINSEC &nbsp;·&nbsp; IIT Jodhpur School of Management</span><span>10 / 13</span></div>
+  </section>
+
+  <!-- SLIDE 11 — TEAM & GOVERNANCE -->
+  <section class="slide light" id="s11">
+    <div class="eyebrow">Team &amp; Governance</div>
+    <h1 class="slide-title">A lean founding team, with clear governance from day one.</h1>
+
+    <div class="tg-cols">
+      <div class="tg-col">
+        <div class="org-box">Founder / President</div>
+        <div class="org-connector"></div>
+        <div class="org-box vp">Vice President</div>
+        <div class="org-connector"></div>
+        <div class="org-leads">
+          <div class="org-lead">Markets &amp;<br>Investment</div>
+          <div class="org-lead">Corporate<br>Finance</div>
+          <div class="org-lead">Competitions</div>
+          <div class="org-lead">Industry &amp;<br>Alumni</div>
+          <div class="org-lead">Marketing &amp;<br>Design</div>
+        </div>
+        <div class="org-note">Team expands based on participation once the founding structure is running.</div>
+      </div>
+      <div class="tg-col">
+        <div class="gov-heading">Governance Principles</div>
+        <div class="gov-item"><div class="gov-dot"></div><div class="gov-text">Faculty mentor (structure to be confirmed with SME)</div></div>
+        <div class="gov-item"><div class="gov-dot"></div><div class="gov-text">Operates under IIT Jodhpur / SME student-body policy</div></div>
+        <div class="gov-item"><div class="gov-dot"></div><div class="gov-text">Transparent, published event calendar</div></div>
+        <div class="gov-item"><div class="gov-dot"></div><div class="gov-text">Responsible financial-market education — no unauthorized financial advice</div></div>
+        <div class="gov-item"><div class="gov-dot"></div><div class="gov-text">No real-money trading using society funds</div></div>
+        <div class="gov-item"><div class="gov-dot"></div><div class="gov-text">Full compliance with institute policies</div></div>
+      </div>
+    </div>
+    <div class="footer"><span>FINSEC &nbsp;·&nbsp; IIT Jodhpur School of Management</span><span>11 / 13</span></div>
+  </section>
+
+  <!-- SLIDE 12 — IMPACT & METRICS -->
+  <section class="slide light" id="s12">
+    <div class="eyebrow">Impact &amp; Success Metrics</div>
+    <h1 class="slide-title">Measuring FINSEC's first year, realistically.</h1>
+
+    <div class="grid-3">
+      <div class="card metric-card"><div class="metric-big">50–100</div><div class="metric-small">Active student participants</div></div>
+      <div class="card metric-card"><div class="metric-big">5–6</div><div class="metric-small">Flagship events across the year</div></div>
+      <div class="card metric-card"><div class="metric-big">2+</div><div class="metric-small">Alumni / industry interactions</div></div>
+      <div class="card metric-card"><div class="metric-big">1</div><div class="metric-small">Flagship investment simulation</div></div>
+      <div class="card metric-card"><div class="metric-big">1+</div><div class="metric-small">National finance competition entered</div></div>
+      <div class="card metric-card"><div class="metric-big">✓</div><div class="metric-small">Placement-ready skill-building for finance-interested freshers</div></div>
+    </div>
+    <div class="footer"><span>FINSEC &nbsp;·&nbsp; IIT Jodhpur School of Management</span><span>12 / 13</span></div>
+  </section>
+
+  <!-- SLIDE 13 — THE ASK / CLOSING -->
+  <section class="slide dark" id="s13">
+    <div class="eyebrow ask-label">The Ask</div>
+    <div class="ask-text">Approval to launch FINSEC as an official SME student society — with a faculty mentor and standard institute support to begin the first-semester calendar.</div>
+    <div class="ask-rule"></div>
+    <div class="closing-brand">FINSEC</div>
+    <div class="closing-sub">Finance &amp; Securities Society &nbsp;·&nbsp; IIT Jodhpur School of Management</div>
+    <div class="closing-tag">Learn Finance.&nbsp;&nbsp;Analyse Markets.&nbsp;&nbsp;Build Capital.</div>
+    <div class="closing-quote">"FINSEC is not another club. It is a platform for students to turn financial knowledge into financial thinking."</div>
+    <div class="closing-credit">Proposed by Saamarth Jain&nbsp;&nbsp;|&nbsp;&nbsp;M26MSA054&nbsp;&nbsp;|&nbsp;&nbsp;MBA 1st Year, Batch of 2028&nbsp;&nbsp;|&nbsp;&nbsp;IIT Jodhpur School of Management</div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prevBtn" title="Previous slide">▲</button>
+  <button id="nextBtn" title="Next slide">▼</button>
+</div>
+<div class="counter" id="counter">1 / 13</div>
+
+<script>
+  const deck = document.getElementById('deck');
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const counter = document.getElementById('counter');
+
+  function currentIndex(){
+    let idx = 0, best = Infinity;
+    slides.forEach((s,i)=>{
+      const d = Math.abs(s.getBoundingClientRect().top);
+      if(d < best){ best = d; idx = i; }
+    });
+    return idx;
+  }
+  function updateCounter(){
+    counter.textContent = (currentIndex()+1) + ' / ' + slides.length;
+  }
+  function goTo(i){
+    if(i<0) i=0;
+    if(i>=slides.length) i=slides.length-1;
+    slides[i].scrollIntoView({behavior:'smooth'});
+  }
+  document.getElementById('nextBtn').addEventListener('click', ()=>goTo(currentIndex()+1));
+  document.getElementById('prevBtn').addEventListener('click', ()=>goTo(currentIndex()-1));
+  document.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowDown' || e.key==='ArrowRight' || e.key===' '){ e.preventDefault(); goTo(currentIndex()+1); }
+    if(e.key==='ArrowUp' || e.key==='ArrowLeft'){ e.preventDefault(); goTo(currentIndex()-1); }
+  });
+  deck.addEventListener('scroll', ()=>{ window.requestAnimationFrame(updateCounter); });
+  updateCounter();
+</script>
+
+</body>
+</html>
